@@ -1,25 +1,28 @@
-# Use uma imagem base oficial do Node.js
+# Usa uma imagem base oficial do Node.js
 FROM node:14
 
-# Define variáveis de ambiente para melhorar a experiência de uso do Node.js em containers
+# Define variáveis de ambiente
 ENV NODE_ENV=production
 
-# Cria e define o diretório de trabalho
+# Define o diretório de trabalho
 WORKDIR /app
 
-# Copia apenas os arquivos necessários para instalar as dependências
+# Copia os arquivos de dependências
 COPY package*.json ./
 
-# Instala as dependências de forma otimizada para o ambiente de produção
-RUN npm install --production
+# Instala todas as dependências
+RUN npm install
 
-# Copia o restante do código da aplicação
+# Copia o código da aplicação
 COPY . .
 
-# Garante que o build seja limpo e prepare o ambiente (se necessário)
+# Realiza o build da aplicação
 RUN npm run build
 
-# Expõe a porta 3000 (ou outra porta se a aplicação usa uma diferente)
+# Remove dependências de desenvolvimento para reduzir o tamanho da imagem
+RUN npm prune --production
+
+# Expõe a porta
 EXPOSE 3000
 
 # Comando para rodar a aplicação
