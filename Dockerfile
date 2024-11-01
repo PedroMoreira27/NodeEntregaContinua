@@ -17,7 +17,7 @@ RUN npm install
 COPY . .
 
 # Realiza o build da aplicação
-RUN npm run build
+RUN npm run start
 
 # Remove dependências de desenvolvimento para reduzir o tamanho da imagem
 RUN npm prune --production
