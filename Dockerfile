@@ -13,6 +13,9 @@ RUN npm install
 # Copia o código da aplicação para o contêiner
 COPY . .
 
+# Copie o arquivo .env
+COPY .env .env
+
 # Expõe a porta 8100 no contêiner
 EXPOSE 8100
 
