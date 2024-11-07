@@ -1,19 +1,19 @@
-# Usa a imagem base do Node.js
+# Usa a imagem base do Node.js (versão 14)
 FROM node:14
 
-# Define o diretório de trabalho
+# Define o diretório de trabalho no contêiner
 WORKDIR /app
 
-# Copia os arquivos de package.json e package-lock.json
+# Copia os arquivos de configuração de dependências
 COPY package*.json ./
 
-# Instala as dependências
+# Instala as dependências da aplicação
 RUN npm install
 
-# Copia o código para o contêiner
+# Copia o código da aplicação para o contêiner
 COPY . .
 
-# Expõe a porta em que a aplicação vai rodar (ajuste conforme a sua aplicação)
+# Expõe a porta 8100 no contêiner
 EXPOSE 8100
 
 # Comando para iniciar a aplicação
