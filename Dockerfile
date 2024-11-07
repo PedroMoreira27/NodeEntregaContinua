@@ -17,7 +17,7 @@ COPY . .
 COPY .env .env
 
 # Expõe a porta 8100 no contêiner
-EXPOSE 8100
+EXPOSE 3000
 
 # Comando para iniciar a aplicação
 CMD ["npm", "start"]
