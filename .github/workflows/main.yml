@@ -24,8 +24,8 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }} .
-          docker push ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/NodeEntregaContinua:${{ github.sha }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/NodeEntregaContinua:${{ github.sha }}
 
       - name: Deploy on Server
         uses: appleboy/ssh-action@v0.1.6
@@ -35,9 +35,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/NodeEntregaContinua:${{ github.sha }}
             docker image prune -f
             docker stop app-node || true
             docker rm app-node || true
-            docker run -d --name app-node -p 8100 ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
-
+            docker run -d --name app-node -p 8100 ${{ secrets.DOCKER_USERNAME }}/NodeEntregaContinua:${{ github.sha }}
