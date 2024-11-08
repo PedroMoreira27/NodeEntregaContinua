@@ -1,20 +1,19 @@
-# Use a imagem base do Node.js
-FROM node:18-alpine
+FROM node:18
 
-# Define o diretório de trabalho dentro do container
+# Define o diretório de trabalho no contêiner
 WORKDIR /NodeEntregaContinua
 
-# Copia o arquivo de dependências para o container
+# Copia os arquivos de configuração de dependências
 COPY package*.json ./
 
-# Instala as dependências
+# Instala as dependências da aplicação
 RUN npm install
 
-# Copia o restante dos arquivos da aplicação para o container
+# Copia o código da aplicação para o contêiner
 COPY . .
 
-# Exponha a porta 8100
+# Expõe a porta 8100 no contêiner
 EXPOSE 8100
 
 # Comando para iniciar a aplicação
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
