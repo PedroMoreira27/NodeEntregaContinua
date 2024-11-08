@@ -35,7 +35,15 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
+            # Pull the latest Docker image from DockerHub
             docker pull ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
+            
+            # Stop and remove the old container if exists
             docker stop app-node || true
             docker rm app-node || true
-            docker run -d --name app-node -p 8100 ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
+            
+            # Run the new container with port 8100 exposed
+            docker run -d --name app-node -p 8100:8100 ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
+
+            # Optional: Show running containers to confirm deployment
+            docker ps
