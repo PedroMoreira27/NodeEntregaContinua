@@ -1,7 +1,6 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
 
-const API_KEY = process.env.TMDB_API_KEY;
 const BASE_URL = 'http://www.omdbapi.com';
 
 async function getPopularMovies() {
@@ -17,7 +16,7 @@ async function getPopularMovies() {
     console.log('\nFilmes Populares:');
     for (const title of movies) {
       const response = await fetch(
-        `${BASE_URL}/?apikey=${API_KEY}&t=${encodeURIComponent(title)}`
+        `${BASE_URL}/?apikey=29bacc79&t=${encodeURIComponent(title)}`
       );
       const movie = await response.json();
       

@@ -24,12 +24,8 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          # Build the Docker image with two tags: SHA hash and latest
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }} -t ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:latest .
-          
-          # Push both tags to DockerHub
-          docker push ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-application:${{ github.sha }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-application:${{ github.sha }}
 
       - name: Deploy on Server
         uses: appleboy/ssh-action@v0.1.8
@@ -39,14 +35,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            # Pull the latest image from DockerHub
-            docker pull ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
-            
-            # Stop and remove the old container if it exists
+            docker pull ${{ secrets.DOCKER_USERNAME }}/my-application:${{ github.sha }}
             docker stop app-node || true
             docker rm app-node || true
-            
-            # Run the container with environment variables and expose the correct port
             docker run -d --name app-node -p 8100:8100 \
-              --env-file /path/to/your/.env \
-              ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
+              ${{ secrets.DOCKER_USERNAME }}/my-application:${{ github.sha }}
