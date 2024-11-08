@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Define o diretório de trabalho dentro do container
-WORKDIR /app
+WORKDIR /NodeEntregaContinua
 
 # Copia o arquivo de dependências para o container
 COPY package*.json ./
@@ -12,9 +12,6 @@ RUN npm install
 
 # Copia o restante dos arquivos da aplicação para o container
 COPY . .
-
-# Define a variável de ambiente para produção
-ENV NODE_ENV=production
 
 # Exponha a porta 8100
 EXPOSE 8100
