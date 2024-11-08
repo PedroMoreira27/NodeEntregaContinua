@@ -1,23 +1,20 @@
-# Usa a imagem base do Node.js (versão 14)
-FROM node:14
+# Usar uma imagem Node mais recente e leve
+FROM node:18-alpine
 
-# Define o diretório de trabalho no contêiner
-WORKDIR /app
+# Definir diretório de trabalho como a raiz do projeto
+WORKDIR /NodeEntregaContinua
 
-# Copia os arquivos de configuração de dependências
+# Copiar os arquivos package.json e package-lock.json (se houver)
 COPY package*.json ./
 
-# Instala as dependências da aplicação
-RUN npm install
+# Instalar dependências
+RUN npm install --no-cache
 
-# Copia o código da aplicação para o contêiner
+# Copiar o restante do código para dentro da imagem
 COPY . .
 
-# Copie o arquivo .env
-COPY .env .env
-
-# Expõe a porta 8100 no contêiner
+# Expor a porta que o seu app usará
 EXPOSE 8100
 
-# Comando para iniciar a aplicação
-CMD ["npm", "start"]
+# Comando para iniciar o aplicativo
+CMD ["node", "app.js"]
