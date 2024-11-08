@@ -16,10 +16,10 @@ async function getPopularMovies() {
     console.log('\nFilmes Populares:');
     for (const title of movies) {
       const response = await fetch(
-        `${BASE_URL}/?apikey=29bacc79&t=${encodeURIComponent(title)}`
+        `${BASE_URL}/?apikey=29bacc79&t=${encodeURIComponent(title)}`,
       );
       const movie = await response.json();
-      
+
       // Log the entire response to debug
       console.log(`Response for ${title}:`, movie);
 
@@ -29,7 +29,9 @@ async function getPopularMovies() {
         console.log(`Avaliação: ${movie.imdbRating}/10`);
         console.log(`Descrição: ${movie.Plot}`);
       } else {
-        console.log(`\nNão foi possível encontrar informações para "${title}".`);
+        console.log(
+          `\nNão foi possível encontrar informações para "${title}".`,
+        );
       }
     }
   } catch (error) {
@@ -40,7 +42,7 @@ async function getPopularMovies() {
 async function searchMovies(query) {
   try {
     const response = await fetch(
-      `${BASE_URL}/?apikey=${API_KEY}&s=${encodeURIComponent(query)}`
+      `${BASE_URL}/?apikey=29bacc79&s=${encodeURIComponent(query)}`,
     );
     const data = await response.json();
 
@@ -49,11 +51,11 @@ async function searchMovies(query) {
       const details = await Promise.all(
         data.Search.slice(0, 5).map(async (movie) => {
           const detailResponse = await fetch(
-            `${BASE_URL}/?apikey=${API_KEY}&i=${movie.imdbID}`
+            `${BASE_URL}/?apikey=29bacc79&i=${movie.imdbID}`,
           );
           const detail = await detailResponse.json();
           return detail;
-        })
+        }),
       );
 
       details.forEach((detail) => {
