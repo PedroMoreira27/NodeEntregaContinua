@@ -35,15 +35,21 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            # Pull the latest Docker image from DockerHub
+            # Garantir que o Docker está rodando corretamente
+            docker --version
+            
+            # Baixar a última imagem da aplicação
             docker pull ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
             
-            # Stop and remove the old container if exists
+            # Parar e remover qualquer container existente
             docker stop app-node || true
             docker rm app-node || true
-            
-            # Run the new container with port 8100 exposed
+
+            # Rodar a aplicação na porta 8100
             docker run -d --name app-node -p 8100:8100 ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
 
-            # Optional: Show running containers to confirm deployment
+            # Verificar se o container está rodando
             docker ps
+
+            # Verificar logs do container para garantir que não houve erro
+            docker logs app-node
