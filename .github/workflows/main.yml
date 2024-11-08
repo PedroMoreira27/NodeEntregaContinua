@@ -1,49 +1,50 @@
-name: Deploy to Docker Server
+name: Deploy Application
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-    
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Log into DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: ~/.docker
-        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
-        restore-keys: |
-          ${{ runner.os }}-docker-
+      - name: Build and Push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
 
-    - name: Log in to DockerHub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Deploy on Server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: 201.23.3.86
+          username: aluno
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            mkdir -p /home/aluno/NodeEntregaContinua
+            chown -R aluno:aluno /home/aluno/NodeEntregaContinua
 
-    - name: Build and push Docker image
-      run: |
-        docker build -t ***/minha-aplicacao:${{ github.sha }} .
-        docker push ***/minha-aplicacao:${{ github.sha }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
 
-    - name: SSH into server and deploy
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: ${{ secrets.SERVER_SSH_PORT }}
-        script: |
-          docker stop app-node || true
-          docker rm app-node || true
-          docker pull ***/minha-aplicacao:${{ github.sha }}
-          docker run -d --name app-node -p 8100:8100 ***/minha-aplicacao:${{ github.sha }}
+            docker stop app-node || true
+            docker rm app-node || true
+
+            docker run -d --name app-node -p 8100:8100 ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
+
+            docker ps
+
+            docker logs app-node
