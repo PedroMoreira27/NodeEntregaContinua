@@ -35,16 +35,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            mkdir -p /home/aluno/NodeEntregaContinua
-            chown -R aluno:aluno /home/aluno/NodeEntregaContinua
-
             docker pull ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
-
             docker stop app-node || true
             docker rm app-node || true
-
             docker run -d --name app-node -p 8100:8100 ${{ secrets.DOCKER_USERNAME }}/minha-aplicacao:${{ github.sha }}
-
-            docker ps
-
-            docker logs app-node
