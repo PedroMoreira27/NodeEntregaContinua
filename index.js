@@ -76,6 +76,18 @@ async function searchMovies(query) {
 async function main() {
   await getPopularMovies();
   await searchMovies('Avatar');
+
+  // Usando um loop infinito para garantir que o processo continue rodando
+  setInterval(async () => {
+    await getPopularMovies();
+    await searchMovies('Avatar');
+  }, 300000); // 5 minutos
+
+  // Um loop infinito para manter o processo ativo
+  while (true) {
+    await new Promise(resolve => setTimeout(resolve, 10000)); // Espera 10 segundos antes de continuar
+  }
 }
 
+// Iniciar a aplicação
 main();
