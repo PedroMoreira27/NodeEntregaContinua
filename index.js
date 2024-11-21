@@ -16,12 +16,9 @@ async function getPopularMovies() {
     console.log('\nFilmes Populares:');
     for (const title of movies) {
       const response = await fetch(
-        `${BASE_URL}/?apikey=29bacc79&t=${encodeURIComponent(title)}`,
+        `${BASE_URL}/?apikey=29bacc79&t=${encodeURIComponent(title)}`
       );
       const movie = await response.json();
-
-      // Log the entire response to debug
-      console.log(`Response for ${title}:`, movie);
 
       if (movie && movie.Response === 'True') {
         console.log(`\nTítulo: ${movie.Title}`);
@@ -29,9 +26,7 @@ async function getPopularMovies() {
         console.log(`Avaliação: ${movie.imdbRating}/10`);
         console.log(`Descrição: ${movie.Plot}`);
       } else {
-        console.log(
-          `\nNão foi possível encontrar informações para "${title}".`,
-        );
+        console.log(`\nNão foi possível encontrar informações para "${title}".`);
       }
     }
   } catch (error) {
@@ -42,20 +37,19 @@ async function getPopularMovies() {
 async function searchMovies(query) {
   try {
     const response = await fetch(
-      `${BASE_URL}/?apikey=29bacc79&s=${encodeURIComponent(query)}`,
+      `${BASE_URL}/?apikey=29bacc79&s=${encodeURIComponent(query)}`
     );
     const data = await response.json();
 
-    console.log(`\nResultados da busca para "${query}":`, data);
     if (data && data.Response === 'True' && data.Search) {
       const details = await Promise.all(
         data.Search.slice(0, 5).map(async (movie) => {
           const detailResponse = await fetch(
-            `${BASE_URL}/?apikey=29bacc79&i=${movie.imdbID}`,
+            `${BASE_URL}/?apikey=29bacc79&i=${movie.imdbID}`
           );
           const detail = await detailResponse.json();
           return detail;
-        }),
+        })
       );
 
       details.forEach((detail) => {
@@ -77,17 +71,14 @@ async function main() {
   await getPopularMovies();
   await searchMovies('Avatar');
 
-  // Usando um loop infinito para garantir que o processo continue rodando
   setInterval(async () => {
     await getPopularMovies();
     await searchMovies('Avatar');
-  }, 300000); // 5 minutos
+  }, 300000);
 
-  // Um loop infinito para manter o processo ativo
   while (true) {
-    await new Promise(resolve => setTimeout(resolve, 10000)); // Espera 10 segundos antes de continuar
+    await new Promise(resolve => setTimeout(resolve, 10000));
   }
 }
 
-// Iniciar a aplicação
 main();
