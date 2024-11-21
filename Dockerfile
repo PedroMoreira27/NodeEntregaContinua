@@ -1,12 +1,11 @@
-FROM node:18
+FROM node:14
 
 WORKDIR /app
 
-COPY package*.json ./index.js
-RUN npm install
+COPY ./index.html .
 
-COPY . .
+EXPOSE 8085
 
-EXPOSE 8100
+RUN npm install -g http-server
 
-CMD ["npm", "start"]
+CMD ["http-server", "."]
