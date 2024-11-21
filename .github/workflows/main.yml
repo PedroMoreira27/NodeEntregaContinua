@@ -30,6 +30,7 @@ jobs:
           host: 201.23.3.86
           username: aluno
           key: ${{ secrets.SSH_KEY }}
+          port: 22
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/app:${{ github.sha }}
             docker stop app || true
