@@ -48,3 +48,4 @@ jobs:
             docker ps
 
             docker logs app-node
+            
